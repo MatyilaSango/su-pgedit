@@ -1,5 +1,4 @@
 "use strict";
-let activeService = "";
 var Services;
 (function (Services) {
     Services["EDIT"] = "edit";
@@ -8,7 +7,17 @@ var Services;
     Services["DOWNLOAD"] = "download";
     Services["NONE"] = "none";
 })(Services || (Services = {}));
-function editService() { }
+let activeService = Services.NONE;
+let editTmpHtmlElement;
+function editService(e) {
+    if (editTmpHtmlElement)
+        editTmpHtmlElement.setAttribute("contentEditable", "false");
+    editTmpHtmlElement = e.target;
+    if (!editTmpHtmlElement.classList.toString().includes("su-pgedit-wrapper")) {
+        editTmpHtmlElement.setAttribute("contentEditable", "true");
+        editTmpHtmlElement.focus();
+    }
+}
 function hightlightService() {
     let selected = window.getSelection();
     let tmpSpanText = document.createElement("span");
@@ -19,14 +28,24 @@ function hightlightService() {
     range === null || range === void 0 ? void 0 : range.insertNode(tmpSpanText);
 }
 function commentService() { }
-function downloadService() { }
+function downloadService() {
+    // @ts-ignore
+    // html2pdf().from(document.body).save(`${document.head.title}.pdf`);
+}
 function setCurrentService(service) {
     var _a, _b;
     (_a = document
         .getElementsByClassName(`su-pgedit-wrapper__${activeService}__active`)[0]) === null || _a === void 0 ? void 0 : _a.classList.remove("su-pgedit__active-service-selected");
-    activeService = service;
-    (_b = document
-        .getElementsByClassName(`su-pgedit-wrapper__${service}__active`)[0]) === null || _b === void 0 ? void 0 : _b.classList.add("su-pgedit__active-service-selected");
+    if (activeService !== service) {
+        activeService = service;
+        (_b = document
+            .getElementsByClassName(`su-pgedit-wrapper__${service}__active`)[0]) === null || _b === void 0 ? void 0 : _b.classList.add("su-pgedit__active-service-selected");
+    }
+    else {
+        if (activeService === Services.EDIT)
+            editTmpHtmlElement.setAttribute("contentEditable", "false");
+        activeService = Services.NONE;
+    }
 }
 window.onload = function () {
     function getSU_pgeditComponent() {
@@ -54,6 +73,12 @@ window.onload = function () {
     tmpDivElement.className = "su-pgedit-wrapper center-items";
     tmpDivElement.innerHTML = getSU_pgeditComponent();
     document.body.appendChild(tmpDivElement);
+    // document.head.innerHTML += `<meta http-equiv="Content-Security-Policy" content="script-src-elem 'self'  http://localhost:* http://127.0.0.1:* 'unsafe-inline' 'unsafe-eval';">`
+    // let tmplScriptElement = document.createElement("script");
+    // tmplScriptElement.type = "application/javascript";
+    // tmplScriptElement.src =
+    //     "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+    // document.head.appendChild(tmplScriptElement);
     //@ts-ignore
     document.getElementById("su-pgedit-wrapper__edit").onclick = function () {
         setCurrentService(Services.EDIT);
@@ -70,10 +95,16 @@ window.onload = function () {
     //@ts-ignore
     document.getElementById("su-pgedit-wrapper__download").onclick = function () {
         setCurrentService(Services.DOWNLOAD);
+        downloadService();
     };
     document.onselectionchange = function () {
         if (activeService === Services.HIGHLIGHT) {
             hightlightService();
         }
     };
+    document.addEventListener("click", function (e) {
+        if (activeService === Services.EDIT) {
+            editService(e);
+        }
+    });
 };
