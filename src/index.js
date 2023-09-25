@@ -12,7 +12,7 @@ let editTmpHtmlElement;
 function editService(e) {
     if (editTmpHtmlElement)
         editTmpHtmlElement.setAttribute("contentEditable", "false");
-    editTmpHtmlElement = e.target;
+    editTmpHtmlElement = e;
     if (!editTmpHtmlElement.classList.toString().includes("su-pgedit-wrapper")) {
         editTmpHtmlElement.setAttribute("contentEditable", "true");
         editTmpHtmlElement.focus();
@@ -47,38 +47,46 @@ function setCurrentService(service) {
         activeService = Services.NONE;
     }
 }
+function getSU_pgeditComponent() {
+    return `
+        <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__edit">
+            <div class="su-pgedit-wrapper__edit__active"></div>
+            <div class="su-pgedit-wrapper__edit"></div>
+        </div>
+        <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__highlight">
+            <div class="su-pgedit-wrapper__highlight__active"></div>
+            <div class="su-pgedit-wrapper__highlight"></div>
+            <input class="su-pgedit-input-color" id="su-pgedit-input-color" type="color">
+        </div>
+        <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__comment">
+            <div class="su-pgedit-wrapper__comment__active"></div>
+            <div class="su-pgedit-wrapper__comment"></div>
+        </div>
+        <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__download">
+            <div class="su-pgedit-wrapper__download__active"></div>
+            <div class="su-pgedit-wrapper__download"></div>
+        </div>
+    `;
+}
+function getSU_pgeditCommentElement() {
+    return `
+        <span class="su-pgedit-comment-wrapper__comment-box">
+            <div class="su-pgedit-comment-wrapper__comment-box__minimize-max">
+                <div class="su-pgedit-comment-wrapper__comment-box__minimize" id="su-pgedit-comment-wrapper__comment-box__minimize"></div>
+                <div class="su-pgedit-comment-wrapper__comment-box__exit" id="su-pgedit-comment-wrapper__comment-box__exit"></div>
+            </div>
+            
+            <span class="su-pgedit-comment-wrapper__comment-box__comment-section" id="su-pgedit-comment-wrapper__comment-box__comment-section">
+                Comment...
+            </span>
+        </span>
+    `;
+}
 window.onload = function () {
-    function getSU_pgeditComponent() {
-        return `
-            <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__edit">
-                <div class="su-pgedit-wrapper__edit__active"></div>
-                <div class="su-pgedit-wrapper__edit"></div>
-            </div>
-            <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__highlight">
-                <div class="su-pgedit-wrapper__highlight__active"></div>
-                <div class="su-pgedit-wrapper__highlight"></div>
-                <input class="su-pgedit-input-color" id="su-pgedit-input-color" type="color">
-            </div>
-            <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__comment">
-                <div class="su-pgedit-wrapper__comment__active"></div>
-                <div class="su-pgedit-wrapper__comment"></div>
-            </div>
-            <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__download">
-                <div class="su-pgedit-wrapper__download__active"></div>
-                <div class="su-pgedit-wrapper__download"></div>
-            </div>
-        `;
-    }
     let tmpDivElement = document.createElement("div");
     tmpDivElement.className = "su-pgedit-wrapper center-items";
     tmpDivElement.innerHTML = getSU_pgeditComponent();
     document.body.appendChild(tmpDivElement);
-    // document.head.innerHTML += `<meta http-equiv="Content-Security-Policy" content="script-src-elem 'self'  http://localhost:* http://127.0.0.1:* 'unsafe-inline' 'unsafe-eval';">`
-    // let tmplScriptElement = document.createElement("script");
-    // tmplScriptElement.type = "application/javascript";
-    // tmplScriptElement.src =
-    //     "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
-    // document.head.appendChild(tmplScriptElement);
     //@ts-ignore
     document.getElementById("su-pgedit-wrapper__edit").onclick = function () {
         setCurrentService(Services.EDIT);
@@ -103,8 +111,37 @@ window.onload = function () {
         }
     };
     document.addEventListener("click", function (e) {
+        var _a, _b, _c, _d, _e;
+        let targetElement = e.target;
         if (activeService === Services.EDIT) {
-            editService(e);
+            editService(targetElement);
+        }
+        if (activeService === Services.COMMENT) {
+            if (targetElement.className === "su-pgedit-comment-wrapper") {
+                targetElement.children[0].classList.remove("hide");
+            }
+            if (targetElement.classList.contains("su-pgedit-comment-wrapper__comment-box__exit")) {
+                (_c = (_b = (_a = targetElement.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement) === null || _b === void 0 ? void 0 : _b.parentElement) === null || _c === void 0 ? void 0 : _c.remove();
+            }
+            if (targetElement.classList.contains("su-pgedit-comment-wrapper__comment-box__minimize")) {
+                (_e = (_d = targetElement.parentElement) === null || _d === void 0 ? void 0 : _d.parentElement) === null || _e === void 0 ? void 0 : _e.classList.add("hide");
+            }
+            if (!targetElement.classList.toString().includes("su-pgedit-comment-wrapper") && !targetElement.classList.toString().includes("su-pgedit-wrapper")) {
+                console.log(targetElement.parentElement);
+                targetElement.style.position = "relative";
+                let tmpCommentElement = document.createElement("div");
+                tmpCommentElement.className = "su-pgedit-comment-wrapper";
+                tmpCommentElement.id = "su-pgedit-comment-wrapper";
+                tmpCommentElement.innerHTML = getSU_pgeditCommentElement();
+                //@ts-ignore
+                tmpCommentElement.style.left = `${e.clientX - e.target.getBoundingClientRect().left}px`;
+                //@ts-ignore
+                tmpCommentElement.style.top = `${e.clientY - e.target.getBoundingClientRect().top}px`;
+                targetElement.appendChild(tmpCommentElement);
+            }
+            if (targetElement.classList.contains("su-pgedit-comment-wrapper__comment-box__comment-section")) {
+                editService(targetElement);
+            }
         }
     });
 };

@@ -10,11 +10,11 @@ enum Services {
 let activeService = Services.NONE as string;
 let editTmpHtmlElement: HTMLElement;
 
-function editService(e: MouseEvent) {
+function editService(e: HTMLElement) {
     if (editTmpHtmlElement)
         editTmpHtmlElement.setAttribute("contentEditable", "false");
 
-    editTmpHtmlElement = e.target as HTMLElement;
+    editTmpHtmlElement = e;
 
     if (!editTmpHtmlElement.classList.toString().includes("su-pgedit-wrapper")) {
         editTmpHtmlElement.setAttribute("contentEditable", "true");
@@ -58,41 +58,49 @@ function setCurrentService(service: string) {
     }
 }
 
+function getSU_pgeditComponent() {
+    return `
+        <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__edit">
+            <div class="su-pgedit-wrapper__edit__active"></div>
+            <div class="su-pgedit-wrapper__edit"></div>
+        </div>
+        <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__highlight">
+            <div class="su-pgedit-wrapper__highlight__active"></div>
+            <div class="su-pgedit-wrapper__highlight"></div>
+            <input class="su-pgedit-input-color" id="su-pgedit-input-color" type="color">
+        </div>
+        <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__comment">
+            <div class="su-pgedit-wrapper__comment__active"></div>
+            <div class="su-pgedit-wrapper__comment"></div>
+        </div>
+        <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__download">
+            <div class="su-pgedit-wrapper__download__active"></div>
+            <div class="su-pgedit-wrapper__download"></div>
+        </div>
+    `;
+}
+
+function getSU_pgeditCommentElement(){
+    return `
+        <span class="su-pgedit-comment-wrapper__comment-box">
+            <div class="su-pgedit-comment-wrapper__comment-box__minimize-max">
+                <div class="su-pgedit-comment-wrapper__comment-box__minimize" id="su-pgedit-comment-wrapper__comment-box__minimize"></div>
+                <div class="su-pgedit-comment-wrapper__comment-box__exit" id="su-pgedit-comment-wrapper__comment-box__exit"></div>
+            </div>
+            
+            <span class="su-pgedit-comment-wrapper__comment-box__comment-section" id="su-pgedit-comment-wrapper__comment-box__comment-section">
+                Comment...
+            </span>
+        </span>
+    `
+}
+
 window.onload = function () {
-    function getSU_pgeditComponent() {
-        return `
-            <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__edit">
-                <div class="su-pgedit-wrapper__edit__active"></div>
-                <div class="su-pgedit-wrapper__edit"></div>
-            </div>
-            <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__highlight">
-                <div class="su-pgedit-wrapper__highlight__active"></div>
-                <div class="su-pgedit-wrapper__highlight"></div>
-                <input class="su-pgedit-input-color" id="su-pgedit-input-color" type="color">
-            </div>
-            <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__comment">
-                <div class="su-pgedit-wrapper__comment__active"></div>
-                <div class="su-pgedit-wrapper__comment"></div>
-            </div>
-            <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__download">
-                <div class="su-pgedit-wrapper__download__active"></div>
-                <div class="su-pgedit-wrapper__download"></div>
-            </div>
-        `;
-    }
 
     let tmpDivElement: HTMLDivElement = document.createElement("div");
     tmpDivElement.className = "su-pgedit-wrapper center-items";
     tmpDivElement.innerHTML = getSU_pgeditComponent();
     document.body.appendChild(tmpDivElement);
-
-    // document.head.innerHTML += `<meta http-equiv="Content-Security-Policy" content="script-src-elem 'self'  http://localhost:* http://127.0.0.1:* 'unsafe-inline' 'unsafe-eval';">`
-
-    // let tmplScriptElement = document.createElement("script");
-    // tmplScriptElement.type = "application/javascript";
-    // tmplScriptElement.src =
-    //     "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
-    // document.head.appendChild(tmplScriptElement);
 
     //@ts-ignore
     document.getElementById("su-pgedit-wrapper__edit").onclick = function () {
@@ -120,8 +128,48 @@ window.onload = function () {
     };
 
     document.addEventListener("click", function (e) {
+        let targetElement = e.target as HTMLElement;
+
         if (activeService === Services.EDIT) {
-            editService(e);
+            editService(targetElement);
         }
+
+        if(activeService === Services.COMMENT){
+            if(targetElement.className === "su-pgedit-comment-wrapper"){
+                targetElement.children[0].classList.remove("hide")
+            }
+
+            if(targetElement.classList.contains("su-pgedit-comment-wrapper__comment-box__exit")){
+                targetElement.parentElement?.parentElement?.parentElement?.remove()
+            }
+    
+            if(targetElement.classList.contains("su-pgedit-comment-wrapper__comment-box__minimize")){
+                targetElement.parentElement?.parentElement?.classList.add("hide")
+            }
+
+            if(!targetElement.classList.toString().includes("su-pgedit-comment-wrapper") && !targetElement.classList.toString().includes("su-pgedit-wrapper")){
+                console.log(targetElement.parentElement as HTMLElement)
+                targetElement.style.position = "relative"
+
+                let tmpCommentElement = document.createElement("div");
+                tmpCommentElement.className = "su-pgedit-comment-wrapper"
+                tmpCommentElement.id = "su-pgedit-comment-wrapper"
+                tmpCommentElement.innerHTML = getSU_pgeditCommentElement()
+
+                //@ts-ignore
+                tmpCommentElement.style.left = `${e.clientX - e.target.getBoundingClientRect().left}px`
+                //@ts-ignore
+                tmpCommentElement.style.top = `${e.clientY - e.target.getBoundingClientRect().top}px`
+
+                targetElement.appendChild(tmpCommentElement)
+
+            }
+
+            if(targetElement.classList.contains("su-pgedit-comment-wrapper__comment-box__comment-section")){
+                editService(targetElement);
+            }
+        }
+
     });
+
 };

@@ -4,6 +4,10 @@
     flex-direction: row;
 }
 
+.hide{
+    display: none;
+}
+
 .su-pgedit-wrapper {
     width: 250px;
     height: 50px;
@@ -74,4 +78,56 @@
     width: 100%;
     height: 100%;
     opacity: 0;
+}
+
+.su-pgedit-comment-wrapper{
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    max-width: 10px;
+    max-height: 10px;
+    border-radius: 50%;
+    background-color: #F2BBC6;
+}
+
+.su-pgedit-comment-wrapper__comment-box{
+    background-color: #F2BBC6;
+    padding: 15px;
+    padding-top: 20px;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 13px;
+    border-radius: 20px;
+    position: absolute;
+    left: 5px;
+}
+
+.su-pgedit-comment-wrapper__comment-box__minimize-max{
+    display: flex;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.su-pgedit-comment-wrapper__comment-box__minimize,
+.su-pgedit-comment-wrapper__comment-box__exit{
+    width: 30px;
+    height: 30px;
+    scale: 0.5;
+    cursor: pointer;
+}
+
+.su-pgedit-comment-wrapper__comment-box__exit{
+    clip-path: path("M7 4C6.744125 4 6.4879687 4.0974687 6.2929688 4.2929688L4.2929688 6.2929688C3.9019687 6.6839688 3.9019687 7.3170313 4.2929688 7.7070312L11.585938 15L4.2929688 22.292969C3.9019687 22.683969 3.9019687 23.317031 4.2929688 23.707031L6.2929688 25.707031C6.6839688 26.098031 7.3170313 26.098031 7.7070312 25.707031L15 18.414062L22.292969 25.707031C22.682969 26.098031 23.317031 26.098031 23.707031 25.707031L25.707031 23.707031C26.098031 23.316031 26.098031 22.682969 25.707031 22.292969L18.414062 15L25.707031 7.7070312C26.098031 7.3170312 26.098031 6.6829688 25.707031 6.2929688L23.707031 4.2929688C23.316031 3.9019687 22.682969 3.9019687 22.292969 4.2929688L15 11.585938L7.7070312 4.2929688C7.5115312 4.0974687 7.255875 4 7 4 z");
+    background-color: red;
+}
+.su-pgedit-comment-wrapper__comment-box__minimize{
+    clip-path: path("M5 13 A 2.0002 2.0002 0 1 0 5 17L25 17 A 2.0002 2.0002 0 1 0 25 13L5 13 z");
+    background-color: white;
+    position: relative;
+    right: -10px;
+}
+
+.su-pgedit-comment-wrapper__comment-box__comment-section{
+    color: black;
 }
