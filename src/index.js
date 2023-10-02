@@ -27,10 +27,21 @@ function hightlightService() {
     range === null || range === void 0 ? void 0 : range.extractContents();
     range === null || range === void 0 ? void 0 : range.insertNode(tmpSpanText);
 }
-function commentService() { }
+function commentService(targetElement, e) {
+    targetElement.style.position = "relative";
+    let tmpCommentElement = document.createElement("div");
+    tmpCommentElement.className = "su-pgedit-comment-wrapper";
+    tmpCommentElement.id = "su-pgedit-comment-wrapper";
+    tmpCommentElement.innerHTML = getSU_pgeditCommentElement();
+    //@ts-ignore
+    tmpCommentElement.style.left = `${e.clientX - e.target.getBoundingClientRect().left}px`;
+    //@ts-ignore
+    tmpCommentElement.style.top = `${e.clientY - e.target.getBoundingClientRect().top}px`;
+    targetElement.appendChild(tmpCommentElement);
+}
 function downloadService() {
     // @ts-ignore
-    // html2pdf().from(document.body).save(`${document.head.title}.pdf`);
+    html2pdf().from(document.body).save(`${document.head.title}.pdf`);
 }
 function setCurrentService(service) {
     var _a, _b;
@@ -127,17 +138,7 @@ window.onload = function () {
                 (_e = (_d = targetElement.parentElement) === null || _d === void 0 ? void 0 : _d.parentElement) === null || _e === void 0 ? void 0 : _e.classList.add("hide");
             }
             if (!targetElement.classList.toString().includes("su-pgedit-comment-wrapper") && !targetElement.classList.toString().includes("su-pgedit-wrapper")) {
-                console.log(targetElement.parentElement);
-                targetElement.style.position = "relative";
-                let tmpCommentElement = document.createElement("div");
-                tmpCommentElement.className = "su-pgedit-comment-wrapper";
-                tmpCommentElement.id = "su-pgedit-comment-wrapper";
-                tmpCommentElement.innerHTML = getSU_pgeditCommentElement();
-                //@ts-ignore
-                tmpCommentElement.style.left = `${e.clientX - e.target.getBoundingClientRect().left}px`;
-                //@ts-ignore
-                tmpCommentElement.style.top = `${e.clientY - e.target.getBoundingClientRect().top}px`;
-                targetElement.appendChild(tmpCommentElement);
+                commentService(targetElement, e);
             }
             if (targetElement.classList.contains("su-pgedit-comment-wrapper__comment-box__comment-section")) {
                 editService(targetElement);
