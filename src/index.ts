@@ -91,6 +91,9 @@ function getSU_pgeditComponent() {
             <div class="su-pgedit-wrapper__download__active"></div>
             <div class="su-pgedit-wrapper__download"></div>
         </div>
+        <div class="su-pgedit-wrapper__show-hide">
+            <div class="su-pgedit-wrapper__show-hide__up-down" id="su-pgedit-wrapper__show-hide__up-down"></div>
+        </div>
     `;
 }
 
@@ -113,6 +116,7 @@ window.onload = function () {
 
     let tmpDivElement: HTMLDivElement = document.createElement("div");
     tmpDivElement.className = "su-pgedit-wrapper center-items";
+    tmpDivElement.id = "su-pgedit-wrapper"
     tmpDivElement.innerHTML = getSU_pgeditComponent();
     document.body.appendChild(tmpDivElement);
 
@@ -171,5 +175,21 @@ window.onload = function () {
         }
 
     });
+
+    let showHideBtn: HTMLElement = document.getElementById("su-pgedit-wrapper__show-hide__up-down") as HTMLElement;
+    let suPgEdit: HTMLElement = document.getElementById("su-pgedit-wrapper") as HTMLElement;
+    let serviceBtns: Element[] = document.getElementsByClassName("su-pgedit-wrapper-btn") as unknown as Element[];
+    suPgEdit.style.height = "50px"
+    showHideBtn.onclick = function(){
+        if(suPgEdit.style.height === "50px"){
+            showHideBtn.style.rotate = "180deg"
+            suPgEdit.style.height = "0"
+            serviceBtns.forEach(element => element.classList.add("visibility-hidden"))
+        } else {
+            showHideBtn.style.rotate = "0deg"
+            suPgEdit.style.height = "50px"
+            serviceBtns.forEach(element => element.classList.remove("visibility-hidden"))
+        }
+    }
 
 };
