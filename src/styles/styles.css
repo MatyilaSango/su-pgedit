@@ -95,19 +95,19 @@
     max-width: 10px;
     max-height: 10px;
     border-radius: 50%;
-    background-color: #F2BBC6;
+    background-color: #0100FF;
 }
 
 .su-pgedit-comment-wrapper__comment-box{
-    background-color: #F2BBC6;
+    background-color: #0100FF;
     padding: 15px;
     padding-top: 20px;
     color: white;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 13px;
-    border-radius: 20px;
     position: absolute;
     left: 5px;
+    top: 5px;
 }
 
 .su-pgedit-comment-wrapper__comment-box__minimize-max{
@@ -137,7 +137,9 @@
 }
 
 .su-pgedit-comment-wrapper__comment-box__comment-section{
-    color: black;
+    color: white;
+    outline: none;
+    border: none;
 }
 
 .su-pgedit-wrapper__show-hide{
