@@ -6,7 +6,7 @@
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["src/index.js", "src/class/PGEDIT.js", "src/enum/enum.js"],
+            "js": ["bundle/bundle.js"],
             "css": ["src/styles/styles.css"]
         }
     ]

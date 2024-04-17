@@ -1,8 +1,13 @@
+import { Services } from "../enum/enum";
+import { IPGEDIT } from "../interface/IPGEDIT";
+// @ts-ignore
+import html2pdf from "html2pdf.js";
+
 /**
  * @class PGEDIT.
  * @implements IPGEDIT
  */
-class PGEDIT implements IPGEDIT {
+export class PGEDIT implements IPGEDIT {
     private _activeService;
     private editTmpHtmlElement: HTMLElement | undefined;
 
@@ -68,8 +73,7 @@ class PGEDIT implements IPGEDIT {
      * @inheritdoc
      */
     downloadService() {
-        // @ts-ignore
-        html2pdf().from(document.body).save(`${document.head.title}.pdf`);
+        html2pdf().from(document.body).save(`${document.head.title}_page.pdf`);
     }
 
     /**
@@ -95,20 +99,20 @@ class PGEDIT implements IPGEDIT {
     getSU_pgeditComponent() {
         return `
             <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__edit">
-                <div class="su-pgedit-wrapper__edit__active"></div>
+                <div class="su-pgedit-wrapper__edit__active" id="su-pgedit-wrapper_active"></div>
                 <div class="su-pgedit-wrapper__edit"></div>
             </div>
             <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__highlight">
-                <div class="su-pgedit-wrapper__highlight__active"></div>
+                <div class="su-pgedit-wrapper__highlight__active" id="su-pgedit-wrapper_active"></div>
                 <div class="su-pgedit-wrapper__highlight"></div>
                 <input class="su-pgedit-input-color" id="su-pgedit-input-color" type="color">
             </div>
             <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__comment">
-                <div class="su-pgedit-wrapper__comment__active"></div>
+                <div class="su-pgedit-wrapper__comment__active" id="su-pgedit-wrapper_active"></div>
                 <div class="su-pgedit-wrapper__comment"></div>
             </div>
             <div class="su-pgedit-wrapper-btn center-items" id="su-pgedit-wrapper__download">
-                <div class="su-pgedit-wrapper__download__active"></div>
+                <div class="su-pgedit-wrapper__download__active" id="su-pgedit-wrapper_active"></div>
                 <div class="su-pgedit-wrapper__download"></div>
             </div>
             <div class="su-pgedit-wrapper__show-hide">

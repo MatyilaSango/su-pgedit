@@ -6,6 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js",
+    "build": "npx tsc",
+    "bundle": "browserify dist/index.js -o bundle/bundle.js",
     "watch": "tsc -watch"
   },
   "repository": {
@@ -20,5 +22,8 @@
   "homepage": "https://github.com/MatyilaSango/su-pgedit#readme",
   "devDependencies": {
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "html2pdf.js": "^0.10.1"
   }
 }

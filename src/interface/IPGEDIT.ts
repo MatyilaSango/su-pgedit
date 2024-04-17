@@ -1,7 +1,7 @@
 /**
  * @interface IPGEDIT
  */
-interface IPGEDIT {
+export interface IPGEDIT {
 
     /**
      * Current active service

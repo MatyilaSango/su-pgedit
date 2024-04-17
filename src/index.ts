@@ -1,3 +1,6 @@
+import { PGEDIT } from "./class/PGEDIT";
+import { Services } from "./enum/enum";
+
 window.onload = function () {
     const pgEditObj = new PGEDIT()
 
@@ -22,7 +25,7 @@ window.onload = function () {
     };
     //@ts-ignore
     document.getElementById("su-pgedit-wrapper__download").onclick = function () {
-        pgEditObj.setCurrentService(Services.DOWNLOAD);
+        // pgEditObj.setCurrentService(Services.DOWNLOAD);
         pgEditObj.downloadService();
     };
 

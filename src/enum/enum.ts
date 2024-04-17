@@ -1,4 +1,4 @@
-enum Services {
+export enum Services {
     EDIT = "edit",
     HIGHLIGHT = "highlight",
     COMMENT = "comment",
